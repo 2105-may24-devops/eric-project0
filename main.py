@@ -38,9 +38,18 @@ help_output = '''
         Can be set in config.json or in the CLI.
 '''
 
+# converts a list of arguments to a dictionary
+def parse_arguments(args):
+    arg_dictionary = {}
+    # skip path argument
+    for i in args[1:]:
+        arg_dictionary.update({i.split(":")[0] : i.split(":")[1]})
+    return arg_dictionary
+
 def main():
     args = sys.argv
     print(len(args), args)
+    print(parse_arguments(args))
     if len(args) == 0:
         print(args)
         print("Not enough arguments \n\n")
