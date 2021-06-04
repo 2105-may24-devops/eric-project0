@@ -1,4 +1,4 @@
-from .connection_initializer import Initializer
+from connection_initializer import Initializer
 import socket
 
 def send_data(address, data) -> bool:
@@ -11,4 +11,4 @@ def send_data(address, data) -> bool:
     s.close()
 
 if __name__ == "__main__":
-    send_data(('127.0.0.1', 8080), Initializer.make_init_message(5000, "mypassword"))
+    send_data(('127.0.0.1', 8080), Initializer.make_init_message(5000, "nopassword"))
