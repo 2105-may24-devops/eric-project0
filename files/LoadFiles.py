@@ -68,7 +68,7 @@ class Payload:
         files = list()
         for file_path in self.__files_to_read:
             try:
-                path, name = paths.path(item.path, self.windows)
+                path, name = paths.path(item.path, self.windows) #problem
                 file = open(file_path, "r")
                 files.append({"path": path, "name": name, "data": file.read(), "is_folder": False})
                 file.close()
