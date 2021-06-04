@@ -38,6 +38,23 @@ help_output = '''
         Can be set in config.json or in the CLI.
 '''
 
+def get_final_arg():
+    options = {"help", "ip", "listen", "send", "terminal"}
+    if sys.argv[len(sys.argv)-1] in options:
+        return sys.argv[len(sys.argv)-1]
+    return None
+
+def parse_args():
+    args = sys.argv
+    return_value = dict()
+    for arg in args:
+        if "=" in arg:
+            split = arg.split("=")
+            return_value[split[0]] = split[1]
+
+    return return_value
+
+
 def main():
     args = sys.argv
     print(len(args), args)
@@ -45,15 +62,19 @@ def main():
         print(args)
         print("Not enough arguments \n\n")
 
-    if len(args) == 1 or args[len(args)-1] == "help" or args[len(args)-1] == "--help" or args[len(args)-1] == "-help":
+    final_arg = get_final_arg()
+    if len(args) == 1 or final_arg is None or final_arg == "help":
         print(help_output)
         return None
 
-    elif args[len(args)-1] == "ip":
+    parsed_args = parse_args()
+    print(parsed_args)
+    
+    if final_arg == "ip":
         print("Your machine's ip address is", get_own_ip())
         return
 
-    elif args[len(args)-1] == "listen":
+    elif final_arg == "listen":
         run_server(("127.0.0.1", 8080), "mypassword")
 
     
