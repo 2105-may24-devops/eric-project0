@@ -1,0 +1,8 @@
+---
+all:
+    hosts:
+        104.215.72.107:
+        20.97.12.217:
+    vars:
+        ansible_ssh_private_key_file: ~/.ssh/revature/vm1_rsa
+        ansible_user: eric

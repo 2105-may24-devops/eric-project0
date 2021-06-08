@@ -1,8 +1,7 @@
 import os
 import sys
-import paths
 import pickle
-
+from . import paths
 class TooManyDuplicates(Exception):
     def __init__(self, msg):
         self.msg = msg
@@ -12,7 +11,6 @@ class Payload:
     # changing this is only possible in the config.json file
 
     #need to change this as the pickled object will send to a server its own client dump_folder
-    dump_folder = "received"
 
     def __init__(self, root_folder : str, cwd=".", flatten : bool = False, files_to_read=list()):
         '''
@@ -42,19 +40,20 @@ class Payload:
 
     def __recursive_files_and_folders(self, dir : str = None, data : list = None) -> list:
         if dir is None:
-            files_and_folders = os.scandir(self.current_working_directory)
+            print(self.root_folder)
+            files_and_folders = os.scandir(self.root_folder)
             payload = list()
         else:
             files_and_folders = os.scandir(dir)
             payload = data
-
+        print(list(files_and_folders))
         for item in files_and_folders:
-            #print(item.name, "\t",item.path, "poop", paths.path(item.path, self.windows))
+            print(item.name, "\t",item.path, "poop", paths.path(item.path, self.windows))
             if item.is_dir():
                 path, name = paths.path(item.path, self.windows)
                 folder = {"path": path, "name": name, "is_folder": True, "data": []}
                 payload.append(folder)
-                self.__recursive_files_and_folders(dir=self.current_working_directory+"/"+folder["path"]+"/"+folder["name"], data=folder["data"])
+                self.__recursive_files_and_folders(dir=self.root_folder+"/"+folder["path"]+"/"+folder["name"], data=folder["data"])
                 continue
             
             # keep an eye on encoding, might cause errors in the future...should be communicated to server
@@ -82,32 +81,32 @@ class Payload:
         else:
             self.payload = self.__get_files_and_folders()
 
-    def create_unpacking_dir(self):
+    def create_unpacking_dir(self, dump_folder):
         try:
-            os.mkdir(self.dump_folder+"/"+self.root_folder)
+            os.mkdir(dump_folder+"/"+self.root_folder)
             return None
         except FileExistsError:
             for i in range(1,20):
                 print("how?")
                 try:
-                    os.mkdir(self.dump_folder+"/"+self.root_folder+"-"+str(i))
+                    os.mkdir(dump_folder+"/"+self.root_folder+"-"+str(i))
                     self.root_folder = self.root_folder+"-"+str(i)
                     return None
                 except Exception as e:
                     pass
         raise TooManyDuplicates("Clean up your received folder or change instance variable root_folder. You have too many duplicates.")
 
-    def unpack_files(self, payload, flatten = False) -> bool:
+    def unpack_files(self, payload, dump_folder : str, flatten = False) -> bool:
         if len(payload) == 0:
             return False
 
-        dump_in = f"{self.dump_folder}/{self.root_folder}/"
+        dump_in = f"{dump_folder}/{self.root_folder}/"
 
         for item in payload:
             if item["is_folder"]:
                 if not flatten:
                     os.mkdir(dump_in + f"{item['path']}/{item['name']}")
-                success = self.unpack_files(item["data"], flatten)
+                success = self.unpack_files(item["data"], dump_folder, flatten)
                 if not success:
                     return False
                 continue

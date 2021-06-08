@@ -26,7 +26,7 @@ def get_cwd():
     return make_absolute(path)
 
 def convert_path(path):
-    path = path_conversion(remove_dot_slash(path, windows))
+    path = path_conversion(remove_dot_slash(path), windows)
     return make_absolute(path)
 
 # splits the full path and returns the path and file/folder name as a two item tuple

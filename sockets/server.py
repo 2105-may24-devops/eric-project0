@@ -14,6 +14,13 @@ class Handler(socketserver.StreamRequestHandler):
     failed_on_unpacking = b'2'
     bad_initializer_msg = b'3'
 
+    PayloadClass = None # all this class must implement is a static method named pickle_load and an instance variable named payload
+
+    def __init__(self, request, client_address, server):
+        super().__init__(request, client_address, server)
+        if self.PayloadClass is None:
+            raise Exception("Payload Class must be set")
+
     def handle(self):
         msg_length, valid = self.middleware()
         if not valid:
@@ -21,6 +28,10 @@ class Handler(socketserver.StreamRequestHandler):
         print("success", msg_length)
         # receive payload and unpack here
         self.wfile.write(Handler.success)
+
+        payload_bytes = self.rfile.read(msg_length)
+        payload = self.PayloadClass.pickle_load(payload_bytes)
+        print(payload.root_folder)
 
     def middleware(self) -> bool:
         # parses initializer message from client
@@ -39,19 +50,22 @@ class Handler(socketserver.StreamRequestHandler):
 
 class ServerThread(Process):
 
-    def __init__(self, address, server_password, *args, **kwargs):
+    def __init__(self, address, server_password, PayloadClass, *args, **kwargs):
         Process.__init__(self,*args, **kwargs)
         self.address = address
         self.server_password = server_password
+        self.PayloadClass = PayloadClass
 
     def run(self):
+        Handler.PayloadClass = self.PayloadClass
         server = socketserver.TCPServer(self.address, Handler)
         Initializer.set_server_password(self.server_password)
+
         while True:
             server.handle_request()
 
-def run_server(address, server_password):
-    server = ServerThread(address, server_password)
+def run_server(address, server_password, PayloadClass):
+    server = ServerThread(address, server_password, PayloadClass)
     server.start()
     print(f"Server listing on {address[0]}:{address[1]}")
     print("Enter 'q' to quit.")
