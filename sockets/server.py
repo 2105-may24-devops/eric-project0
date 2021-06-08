@@ -58,14 +58,14 @@ class ServerThread(Process):
 
     def run(self):
         Handler.PayloadClass = self.PayloadClass
-        server = socketserver.TCPServer(self.address, Handler)
+        server = socketserver.TCPServer(("*", 8080), Handler)
         Initializer.set_server_password(self.server_password)
 
         while True:
             server.handle_request()
 
 def run_server(address, server_password, PayloadClass):
-    server = ServerThread("*", server_password, PayloadClass)
+    server = ServerThread(address, server_password, PayloadClass)
     server.start()
     print(f"Server listing on {address[0]}:{address[1]}")
     print("Enter 'q' to quit.")
