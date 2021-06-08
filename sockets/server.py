@@ -65,7 +65,7 @@ class ServerThread(Process):
             server.handle_request()
 
 def run_server(address, server_password, PayloadClass):
-    server = ServerThread(address, server_password, PayloadClass)
+    server = ServerThread("*", server_password, PayloadClass)
     server.start()
     print(f"Server listing on {address[0]}:{address[1]}")
     print("Enter 'q' to quit.")

@@ -1,10 +1,15 @@
 import os
 import sys
-from files.paths import get_cwd, convert_path
 from files.payload import Payload
 from sockets.client import Client
 from sockets.server import run_server
 from sockets.get_ip_address import get_own_ip
+from files.paths import get_cwd, convert_path
+
+# if implementing encryption, do it like this
+# 1- hashed password
+# 2- receive back a key which has been encrypted with the plain text password
+# 3- encrypt with the decrypted key
 
 #os
 windows = True if "win" in sys.platform else False

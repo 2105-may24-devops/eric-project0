@@ -10,6 +10,8 @@ class Client:
 
     def __init__(self, address : tuple, data : bytes):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # creates tcp socket which accepts IPv4 address
+        self.socket.settimeout(2)
+        print(address)
         self.socket.connect(address) # attempts to connect to given address
         # if this fails, it will raise a ConnectionRefusedError which must be caught
         # where the constructor is called
