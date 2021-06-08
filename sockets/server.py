@@ -1,6 +1,7 @@
 from .connection_initializer import Initializer
 from multiprocessing import Process
 import socketserver
+from .get_ip_address import get_own_ip
 
 # server_password = "nopassword"
 # the only reasonable way to handle this shit is with a header message that tells you how many bytes arrive
@@ -58,7 +59,7 @@ class ServerThread(Process):
 
     def run(self):
         Handler.PayloadClass = self.PayloadClass
-        server = socketserver.TCPServer(("0.0.0.0", 8080), Handler)
+        server = socketserver.TCPServer((get_own_ip(), 8080), Handler)
         Initializer.set_server_password(self.server_password)
 
         while True:
@@ -67,7 +68,7 @@ class ServerThread(Process):
 def run_server(address, server_password, PayloadClass):
     server = ServerThread(address, server_password, PayloadClass)
     server.start()
-    print(f"Server listing on {address[0]}:{address[1]}")
+    print(f"Server listing on {get_own_ip()}:{address[1]}")
     print("Enter 'q' to quit.")
     while True:
         try:
