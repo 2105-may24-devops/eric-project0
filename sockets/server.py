@@ -58,7 +58,7 @@ class ServerThread(Process):
 
     def run(self):
         Handler.PayloadClass = self.PayloadClass
-        server = socketserver.TCPServer(("*", 8080), Handler)
+        server = socketserver.TCPServer(("0.0.0.0", 8080), Handler)
         Initializer.set_server_password(self.server_password)
 
         while True:
