@@ -1,0 +1,9 @@
+---
+- name: os level setup
+  hosts: all
+  tasks:
+  - name: copy logs to home dir
+    fetch:
+        src: /home/eric/p0/logs/*
+        dest: ~/logs
+        fail_on_missing: no

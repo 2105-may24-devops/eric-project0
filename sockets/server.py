@@ -39,9 +39,7 @@ class Handler(socketserver.StreamRequestHandler):
         self.wfile.write(self.success)
         key = generate_key(Initializer.server_password)
         self.wfile.write(key)
-        print(key, "key")
         payload_bytes = self.rfile.read(msg_length)
-        print(msg_length, decrypt(payload_bytes, key)[0:10])
         payload = self.PayloadClass.pickle_load(decrypt(payload_bytes, key))
         if not payload.unpack_payload(self.receive_folder):
             self.wfile.write(self.failed_on_unpacking)
