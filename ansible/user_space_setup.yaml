@@ -1,0 +1,14 @@
+---
+- name: something
+  hosts: all
+  tasks:  
+  - name: "clone or git pull"
+    git:
+        repo: https://github.com/2105-may24-devops/eric-project0.git
+        dest: /home/eric/p0
+        force: yes
+        update: yes
+  - name: create virtual environment
+    pip:
+        virtualenv: /home/eric/p0/env
+        requirements: /home/eric/p0/requirements.txt

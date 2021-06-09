@@ -1,4 +1,5 @@
 # args:
+
 # job: Job can only be five keywords; send, listen, ip, terminal or help. Must be final argument. Must be unnamed. This argument is required.
 
 # -ip: ip address of the server to send to. required only if job=send.
@@ -19,9 +20,6 @@
         A user can supply cwd through either a command line argument or pass it in config.json.
 
 # -receive-folder: Folder where all received data is stored.
-        This argument is only relevant when job=listen. When data is received, data is unpacked in cwd/received unless -receive-folder is set
-        This argument can be set in either the command line or config.json
+        This argument is only relevant when job=listen. When data is received, data is unpacked in cwd/received unless -receive-folder is set. This argument can be set in either the command line or config.json
 
-# -max-bytes: Only applicable when job=listen. By default 4,294,967,296 is the max bytes(4.29 GB). 
-        Any amount sent above this maximum by a client will be rejected. Cannot only be less than the default, cannot be increased.
-        Can be set in config.json or in the CLI.
+# response code: 0=success, 1=bad password, 2=failed to unpack folders, 3=failed to initialize connection properly

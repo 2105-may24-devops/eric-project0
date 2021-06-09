@@ -1,0 +1,25 @@
+---
+- name: os level setup
+  hosts: all
+  tasks:
+  - name: git
+    become: yes
+    package:
+        name: git
+        state: present
+  - name: python3
+    become: yes
+    package:
+        name: python3
+        state: present
+  - name: ensure pip3 is installed
+    become: yes
+    package:
+        name: python3-pip
+        state: present
+  - name: ensure that virtualenv is installed
+    become: yes
+    pip:
+        name: virtualenv
+        executable: pip3
+        state: present

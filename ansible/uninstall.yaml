@@ -1,0 +1,8 @@
+---
+- name: uninstall
+  hosts: all
+  tasks:
+  - name: uninstall app
+    file:
+        path: /home/eric/p0
+        state: absent      

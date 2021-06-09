@@ -51,7 +51,7 @@ class Payload:
         #print(list(files_and_folders)[0].is_dir(), type(files_and_folders), "yo")
         with os.scandir(p) as files_and_folders:
             for item in files_and_folders:
-                #print(item, "pls")
+
                 if item.is_dir():
                     path, name = paths.path(item.path, self.windows)
                     folder = {"path": path, "name": name, "is_folder": True, "data": []}
@@ -59,10 +59,9 @@ class Payload:
                     self.__recursive_files_and_folders(dir=folder["path"]+"/"+folder["name"], data=folder["data"])
                     continue
                 
-                # keep an eye on encoding, might cause errors in the future...should be communicated to server
+                # ignoring errors might result in loss of data...
                 path, name = paths.path(item.path, self.windows)
                 file_data = open(item.path, "r", encoding="utf8", errors="ignore")
-                #print(file_data, "REEE")
                 payload.append({"path": path, "name": name, "data": file_data.read(), "is_folder": False })
                 file_data.close()
         return payload
@@ -80,6 +79,7 @@ class Payload:
         return files
 
     def get_files(self) -> None:
+        # calling function needs to do so in the try/except block
         if len(self.__files_to_read) == 0:
             self.payload = self.__recursive_files_and_folders()
         else:
@@ -90,8 +90,7 @@ class Payload:
             os.mkdir(dump_folder+"/"+self.root_folder)
             return None
         except FileExistsError:
-            for i in range(1,20):
-                print("how?")
+            for i in range(1,1001):
                 try:
                     os.mkdir(dump_folder+"/"+self.root_folder+"-"+str(i))
                     self.root_folder = self.root_folder+"-"+str(i)
@@ -134,8 +133,7 @@ class Payload:
     def unpack_payload(self, dump_folder : str, flatten=False):
         self.create_unpacking_dir(dump_folder)
         print("yes", dump_folder, self.root_folder)
-        self.unpack_files(self.payload, dump_folder, flatten)
-        print("now")
+        return self.unpack_files(self.payload, dump_folder, flatten)
 
     def pickle_dump(self) -> bytes:
         return pickle.dumps(self)

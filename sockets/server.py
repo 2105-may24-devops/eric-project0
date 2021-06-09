@@ -1,7 +1,13 @@
-from .connection_initializer import Initializer
-from multiprocessing import Process
 import socketserver
+import logging
+from .encryption import generate_key, decrypt
+from .connection_initializer import Initializer
 from .get_ip_address import get_own_ip
+from multiprocessing import Process
+
+
+def server_log(out):
+    logging.getLogger("server").info(out)
 
 # server_password = "nopassword"
 # the only reasonable way to handle this shit is with a header message that tells you how many bytes arrive
@@ -24,37 +30,47 @@ class Handler(socketserver.StreamRequestHandler):
             raise Exception("Payload Class must be set")
 
     def handle(self):
-        msg_length, valid = self.middleware()
+        msg_length, if_error, valid = self.middleware()
         if not valid:
+            self.wfile.write(if_error)
+            server_log(f"Connection from {self.client_address[0]} closed with error code {if_error.decode('utf8')}")
             return
-        print("success", msg_length)
-        # receive payload and unpack here
-        self.wfile.write(Handler.success)
-
+        
+        self.wfile.write(self.success)
+        key = generate_key(Initializer.server_password)
+        self.wfile.write(key)
+        print(key, "key")
         payload_bytes = self.rfile.read(msg_length)
-        payload = self.PayloadClass.pickle_load(payload_bytes)
-        # print(payload.root_folder, "papapapap")
-        payload.unpack_payload(self.receive_folder)
+        print(msg_length, decrypt(payload_bytes, key)[0:10])
+        payload = self.PayloadClass.pickle_load(decrypt(payload_bytes, key))
+        if not payload.unpack_payload(self.receive_folder):
+            self.wfile.write(self.failed_on_unpacking)
+            server_log(f"Failed to unpack received data from {self.client_address[0]}")
+            return
+        server_log(f"Succesfully received and unpacked {payload.root_folder} from {self.client_address[0]}")
+        self.wfile.write(Handler.success)
+            
 
-    def middleware(self) -> bool:
+    def middleware(self) -> tuple: # response
         # parses initializer message from client
         # checks password, if password is valid, returns msg_length and True
         # if not valid, returns 0, False
         b_array = self.rfile.read(71)
         data_length, client_password = Initializer.stringify_init_message(b_array)
-        print(data_length, client_password, Initializer.valid_password(client_password))
+
         if client_password == "":
             self.wfile.write(Handler.bad_initializer_msg)
-            return 0, False
+            return 0, self.bad_initializer_msg, False
+        
         if not Initializer.valid_password(client_password):
             self.wfile.write(Handler.bad_password)
-            return 0, False
-        return data_length, True
+            return 0, self.bad_password, False
+        return data_length, 0,  True
 
 class ServerThread(Process):
 
     def __init__(self, address, server_password, receive_folder, PayloadClass, *args, **kwargs):
-        Process.__init__(self,*args, **kwargs)
+        Process.__init__(self, *args, **kwargs)
         self.address = address
         self.server_password = server_password
         self.receive_folder = receive_folder
