@@ -5,6 +5,6 @@ terminal.py
 learnz.py
 another.py
 files/haha
-*.sh
 pp
 logs/*
+!logs/.gitkeep
