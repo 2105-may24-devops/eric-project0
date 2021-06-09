@@ -86,6 +86,8 @@ class Payload:
             self.payload = self.__get_files_and_folders()
 
     def create_unpacking_dir(self, dump_folder):
+        split = self.root_folder.split("/")
+        self.root_folder = self.root_folder[len(split)]
         try:
             os.mkdir(dump_folder+"/"+self.root_folder)
             return None
