@@ -58,15 +58,8 @@ class Client:
     # if it returns True, the data was sent succesfully. Otherwise, something went wrong.
     def parse_response(self, response):
         if response == self.success:
-            print("success")
+            # print("success")
             return True
-        elif response == self.bad_password:
-            print("bad password")
-        elif response == self.failed_on_unpacking:
-            print("server couldn't unpack you paylaod")
-        elif response == self.bad_initializer_msg:
-            print("you sent the server a bad initializer message")
-        
         return False
 
     # this method wraps the above two, sending the whole request

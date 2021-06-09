@@ -135,7 +135,7 @@ class Payload:
 
     def unpack_payload(self, dump_folder : str, flatten=False):
         self.create_unpacking_dir(dump_folder)
-        print("yes", dump_folder, self.root_folder)
+        #print("yes", dump_folder, self.root_folder)
         return self.unpack_files(self.payload, dump_folder, flatten)
 
     def pickle_dump(self) -> bytes:
