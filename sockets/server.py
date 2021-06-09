@@ -7,6 +7,7 @@ from multiprocessing import Process
 
 
 def server_log(out):
+    print(out)
     logging.getLogger("server").info(out)
 
 # server_password = "nopassword"
