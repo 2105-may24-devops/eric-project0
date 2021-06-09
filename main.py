@@ -51,11 +51,12 @@ def listen(parsed_args):
             exit(1)
     
     # check if received-folder exists inside in given path and is a directory
-    if not any(filter(lambda x : x.name == parsed_args.get("receive-folder", RECEIVE_FOLDER) and x.is_dir(), os.scandir())):
+    receive_folder = parsed_args.get("receive-folder", RECEIVE_FOLDER)
+    if not any(filter(lambda x : x.name == receive_folder and x.is_dir(), os.scandir())):
         print("Couldn't find your intended received-folder. Make sure it exists.")
         exit(1)
     # need to send receive into the backend somehow...
-    run_server(("127.0.0.1", port), password, Payload)
+    run_server(("127.0.0.1", port), password, receive_folder, Payload)
             
 def send(parsed_args):
     ip_address = parsed_args.get("ip", None)
@@ -75,15 +76,12 @@ def send(parsed_args):
     payload = Payload(to_send, flatten=False)
     payload.get_files()
     pp = payload.pickle_dump()
-    print("hahahaha", len(pp), pp)
     client = Client((ip_address, port), pp)
-    print(client.send_request(password))
+    client.send_request(password)
 
 def main():
     args = sys.argv
-    print(len(args), args)
     if len(args) == 0:
-        print(args)
         print("Not enough arguments \n\n")
 
     final_arg = get_final_arg()
@@ -94,7 +92,6 @@ def main():
         return None
 
     parsed_args = parse_args()
-    print(parsed_args)
     
     if final_arg == "ip":
         print("Your machine's ip address is", get_own_ip())
@@ -111,6 +108,4 @@ def main():
 
 
 if __name__ == "__main__":
-    print("caw")
-
     main()

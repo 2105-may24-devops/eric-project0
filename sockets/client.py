@@ -1,4 +1,5 @@
 from .connection_initializer import Initializer
+from progressbar import ProgressBar
 import socket
 
 class Client:
@@ -11,10 +12,14 @@ class Client:
     def __init__(self, address : tuple, data : bytes):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # creates tcp socket which accepts IPv4 address
         self.socket.settimeout(2)
-        print(address)
-        self.socket.connect(address) # attempts to connect to given address
-        # if this fails, it will raise a ConnectionRefusedError which must be caught
-        # where the constructor is called
+        try:
+            self.socket.connect(address) # attempts to connect to given address
+            # if this fails, it will raise a ConnectionRefusedError which must be caught
+            # where the constructor is called
+        except ConnectionRefusedError:
+            print(f"Couldn't connect to {self.address[0]}:{self.address[1]}")
+            exit(1)
+        self.socket.settimeout(None)
         self.payload : bytes = data
 
     def send_initializer(self, password : str) -> bytes:
@@ -24,8 +29,19 @@ class Client:
         return recv
 
     def send_data(self) -> bytes:
-        print(self.payload[5:10], "sdfoisjdfsdojf")
-        self.socket.sendall(self.payload)
+        #print(len(self.payload), "sdfoisjdfsdojf")
+        #self.socket.sendall(self.payload)
+        bytes_sent = 0
+        progress_bar = ProgressBar(max_value=len(self.payload))
+        while bytes_sent <= len(self.payload):
+            if bytes_sent + 256 >= len(self.payload):
+                self.socket.send(self.payload[bytes_sent:len(self.payload)])
+                progress_bar.update(len(self.payload))
+                break
+            progress_bar.update(bytes_sent+256)
+            self.socket.send(self.payload[bytes_sent:bytes_sent+256])
+            bytes_sent+=256
+        progress_bar.finish()
         recv = self.socket.recv(1)
         return recv
 

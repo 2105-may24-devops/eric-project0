@@ -8,10 +8,10 @@
     package:
         name: git
         state: present
-  - name: python3.9
+  - name: python3
     become: yes
     package:
-        name: python3.9
+        name: python3
         state: present
   - name: ensure pip3 is installed
     become: yes

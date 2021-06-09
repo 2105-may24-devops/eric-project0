@@ -3,3 +3,4 @@ blessed==1.18.0
 jinxed==1.1.0
 six==1.16.0
 wcwidth==0.2.5
+progressbar2==3.53.1

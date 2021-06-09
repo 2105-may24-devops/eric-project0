@@ -40,27 +40,31 @@ class Payload:
 
     def __recursive_files_and_folders(self, dir : str = None, data : list = None) -> list:
         if dir is None:
-            print(self.root_folder)
-            files_and_folders = os.scandir(self.root_folder)
+            # print(self.root_folder)
+            # files_and_folders = os.scandir(self.root_folder)
+            p = self.root_folder
             payload = list()
         else:
-            files_and_folders = os.scandir(dir)
+            # files_and_folders = os.scandir(dir)
+            p = dir
             payload = data
-        print(list(files_and_folders))
-        for item in files_and_folders:
-            print(item.name, "\t",item.path, "poop", paths.path(item.path, self.windows))
-            if item.is_dir():
+        #print(list(files_and_folders)[0].is_dir(), type(files_and_folders), "yo")
+        with os.scandir(p) as files_and_folders:
+            for item in files_and_folders:
+                #print(item, "pls")
+                if item.is_dir():
+                    path, name = paths.path(item.path, self.windows)
+                    folder = {"path": path, "name": name, "is_folder": True, "data": []}
+                    payload.append(folder)
+                    self.__recursive_files_and_folders(dir=folder["path"]+"/"+folder["name"], data=folder["data"])
+                    continue
+                
+                # keep an eye on encoding, might cause errors in the future...should be communicated to server
                 path, name = paths.path(item.path, self.windows)
-                folder = {"path": path, "name": name, "is_folder": True, "data": []}
-                payload.append(folder)
-                self.__recursive_files_and_folders(dir=self.root_folder+"/"+folder["path"]+"/"+folder["name"], data=folder["data"])
-                continue
-            
-            # keep an eye on encoding, might cause errors in the future...should be communicated to server
-            path, name = paths.path(item.path, self.windows)
-            file_data = open(item.path, "r", encoding="mbcs")
-            payload.append({"path": path, "name": name, "data": file_data.read(), "is_folder": False })
-            file_data.close()
+                file_data = open(item.path, "r", encoding="utf8", errors="ignore")
+                #print(file_data, "REEE")
+                payload.append({"path": path, "name": name, "data": file_data.read(), "is_folder": False })
+                file_data.close()
         return payload
 
     def __get_files_and_folders(self) -> list:
@@ -97,32 +101,41 @@ class Payload:
         raise TooManyDuplicates("Clean up your received folder or change instance variable root_folder. You have too many duplicates.")
 
     def unpack_files(self, payload, dump_folder : str, flatten = False) -> bool:
+        #print(payload, "odaifjsofijdsfs")
         if len(payload) == 0:
             return False
 
-        dump_in = f"{dump_folder}/{self.root_folder}/"
-
+        dump_in = f"{dump_folder}"
+        #print(payload, "in here pls")
         for item in payload:
+            path = item["path"].split("/")
+            path[0] = self.root_folder
+            item["path"] = '/'.join(path)
+            
             if item["is_folder"]:
                 if not flatten:
-                    os.mkdir(dump_in + f"{item['path']}/{item['name']}")
+                    os.mkdir(dump_in + f"/{item['path']}/{item['name']}")
                 success = self.unpack_files(item["data"], dump_folder, flatten)
                 if not success:
                     return False
                 continue
-            
+            #print(dump_in, "toot")
             try:
-                path = item["name"] if flatten == True else f"{item['path']}/{item['name']}/"
-                file = open(dump_in+"/"+path , "w")
+                path = item["name"] if flatten == True else f"{item['path']}/{item['name']}"
+                #print(path)
+                file = open(dump_in+"/"+path , "w", errors="ignore")
                 file.write(item["data"])
                 file.close()
             except Exception as e:
+                print(e, "ex")
                 return False
         return True
 
-    def unpack_payload(self, flatten=False):
-        self.create_unpacking_dir()
-        self.unpack_files(self.payload, flatten)
+    def unpack_payload(self, dump_folder : str, flatten=False):
+        self.create_unpacking_dir(dump_folder)
+        print("yes", dump_folder, self.root_folder)
+        self.unpack_files(self.payload, dump_folder, flatten)
+        print("now")
 
     def pickle_dump(self) -> bytes:
         return pickle.dumps(self)
@@ -136,6 +149,6 @@ class Payload:
 if __name__ == "__main__":
     f=Payload()
     f.get_files()
-    print(f.payload)
+    #print(f.payload)
     # f=paths.remove_dot_slash("./fff/tt.txt")
     # print(f)
