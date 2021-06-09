@@ -5,6 +5,8 @@ all:
             ansible_ssh_private_key_file: ~/.ssh/revature/vm1_rsa
         20.97.12.217:
             ansible_ssh_private_key_file: ~/.ssh/revature/vm1_rsa
+        13.66.8.112:
+            ansible_ssh_private_key_file: ~/.ssh/revature/vm1_rsa
         52.142.60.104:
             ansible_ssh_private_key_file: ~/.ssh/vm1_key.pem
     vars:

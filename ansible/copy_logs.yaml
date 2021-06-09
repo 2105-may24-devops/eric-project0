@@ -1,9 +1,14 @@
+# fetches logs from managed nodes
 ---
 - name: os level setup
   hosts: all
   tasks:
   - name: copy logs to home dir
     fetch:
-        src: /home/eric/p0/logs/*
-        dest: ~/logs
-        fail_on_missing: no
+      src: '{{ item }}'
+      dest: /home/eric/logs/{{ inventory_hostname }}/
+      fail_on_missing: no
+      flat: yes
+    with_items:
+      - /home/eric/p0/logs/client.log
+      - /home/eric/p0/logs/server.log
