@@ -6,7 +6,7 @@ from files.payload import Payload
 from sockets.client import Client
 from sockets.server import run_server
 from sockets.get_ip_address import get_own_ip
-from files.paths import get_cwd, convert_path
+from files.paths import get_cwd
 
 # if implementing encryption, do it like this
 # 1- hashed password

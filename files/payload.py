@@ -2,6 +2,7 @@ import os
 import sys
 import pickle
 from . import paths
+
 class TooManyDuplicates(Exception):
     def __init__(self, msg):
         self.msg = msg

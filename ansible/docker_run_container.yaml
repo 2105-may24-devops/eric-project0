@@ -1,0 +1,13 @@
+---
+- name: run container
+  hosts: all
+  tasks:
+  - name: pull image
+    become: yes
+    community.docker.docker_image:
+       name: aypas/p0
+       source: pull
+  - name: run image
+    become: yes
+    shell:
+       cmd: docker run -dp 8080:8080 aypas/p0

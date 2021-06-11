@@ -42,7 +42,9 @@ class Client:
         #self.socket.sendall(self.payload)
         bytes_sent = 0
         progress_bar = ProgressBar(max_value=len(self.payload))
+
         encrypted_data = encrypt(self.payload, key)
+
         while bytes_sent <= len(self.payload):
             if bytes_sent + 256 >= len(self.payload):
                 self.socket.send(encrypted_data[bytes_sent:len(encrypted_data)])
@@ -51,6 +53,7 @@ class Client:
             progress_bar.update(bytes_sent+256)
             self.socket.send(encrypted_data[bytes_sent:bytes_sent+256])
             bytes_sent+=256
+        
         progress_bar.finish()
         recv = self.socket.recv(1)
         return recv

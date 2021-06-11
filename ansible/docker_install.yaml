@@ -1,0 +1,17 @@
+---
+- name: deploy app in listening mode with a docker container
+  hosts: all
+  tasks:
+  - name: copy installer file to hosts
+    copy:
+       src: ./docker_install.sh
+       dest: /home/eric
+  - name: run installer file
+    become: yes
+    shell:
+       cmd: sh /home/eric/docker_install.sh
+  - name: install docker sdk for pip
+    become: yes
+    pip:
+      name: docker
+      state: present
