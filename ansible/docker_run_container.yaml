@@ -9,5 +9,8 @@
        source: pull
   - name: run image
     become: yes
-    shell:
-       cmd: docker run -dp 8080:8080 aypas/p0
+    docker_container:
+       name: test-p0
+       image: aypas/p0
+       published_ports: 8080:8080
+       state: started

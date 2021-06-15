@@ -1,0 +1,15 @@
+---
+- name: remove docker container
+  hosts: all
+  tasks:
+  - name: get container id
+    become: yes
+    community.docker.docker_host_info:
+      containers: yes
+    register: docker_info
+  - name: stop container
+    become: yes
+    docker_container:
+      name: "{{ item }}"
+      state: absent
+    loop: "{{ docker_info.containers | map(attribute='Id') | list }}"
