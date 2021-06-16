@@ -1,0 +1,31 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: InstallSSHKey@0
+  inputs:
+    knownHostsEntry: |
+      |1|XFvVdgYQ2DD5JAJ7qXg3ODyqpdc=|GoAjCSNFnTWtTnhM3btmy5ea+CM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLP9SkKMe2QK5e4IzLNCvQtDJ06ofyC7rbGHbU6/pye2c+Db+YxnKoMmQVLYIU6F416jFrXbq9IRbcpZXygywc8=
+      |1|tZ5gx2jPK36dia9BRke+E4hx4Ss=|mScwt7FNE1iCV+m2k1nDhdPCwO0= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBol0BBG7Ah1dEgciEgRkqJ3tnLSOPHGKJtPlhM1yeiQAl3I4OIhTvY+EzMUS4hz/TppuiG6iHxlaU1D814MWC4=
+      |1|IlszY9vByjMipoMcaaqWgYiEgEs=|fjFG5IByZvXqIzsC9CIghOjwQWw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKxuYYEb5LI/T63wyI0/Mta3vjYqAMUmImaf/wwR50f2zBe98I43bHuywVhF6iaOK+8j5Cl/A+wG3WBLbRv42AY=
+      |1|evdeITbm6JOjW4Ktu73stHZzAeQ=|umo8bM0RTmrCIZWb6dUOs4bCVsg= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFAZU4nQNS6lNWqiFzoQ4pjTSmsGyxWmyoZS7pzSWooaua/yV9JDou49KuhCzZakpP/PY0WfTxbo/KrZM+ESW+Q=
+      |1|P0JfMWqgq3UvNhwiiq3tn4FLd/E=|kf4XyHGbv0saHg3figo/81IS9Yw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBfwA8ffUK9pikytYc3MYTtXZB9TSvAkm9Ndl/3xz1bOuoKvyO8g3IsxmOUJCyuA65u6y83COTC135gD4tf30SI=
+      |1|1S0uWf6zFzCDZprZ4mUhYtJY/oY=|eNJnp5tLo8Uh+n6iRB9g0HnB63Y= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBC4Hc1jrCWhRv6R2Rnbdy11Z7keeVbVsdHnhWYjSuw6P+MwlF314cVirXS9nHOnylEzXSHEkkEaPrYWoWuR5y70=
+      |1|Vq2C4JC1ODoDL4Q1YplDcfI1IxU=|f2pz9/u2YE/VXpp38q9p4+pUG3E= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBIYeyQU2ZiWs83aJVQ/sJ8whgkvpRliSajh5Te6t+M3BeGKxE3Ojvsx2zo+CE2Rz+LcslvJ747oqR02ImUS5a9E=
+      |1|YJ0Ft2EjitxaAsI+knhVGuX7vSs=|9WFXs17sOP8iEb7p9Xb2Q7O8Rws= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBqTXxeit0wx2qHa9oxY4Dv5uGiOD6PtqH+5zdGJRd9s8vitU4qCp3U7QxsKNY2UagWJcz5oITyagVqU3SKOkzE=
+      |1|rALWeiLi29Czjk8G62/LbLx0QZs=|ovfO0z54rxyrGE2I9CPSrEOY2Bw= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBB8uiPgYsAfhZo9tzfam2hbv7G1TUF4hk0jzrxO/SjLO2qBpMrlDaQvQWYZI3kdNT1xgFHFKSXcyaPElszq3tqU=
+    sshKeySecureFile: '2105-may24-devops-ubuntu-vm-1_key.pem'
+- task: Ansible@0
+  inputs:
+    ansibleInterface: 'agentMachine'
+    playbookPathOnAgentMachine: 'ansible/uninstall.yaml'
+    inventoriesAgentMachine: 'hostList'
+    inventoryHostListAgentMachine: '104.215.72.107,20.97.12.217'
