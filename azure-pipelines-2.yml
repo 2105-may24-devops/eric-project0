@@ -27,5 +27,5 @@ steps:
   inputs:
     ansibleInterface: 'agentMachine'
     playbookPathOnAgentMachine: 'ansible/uninstall.yaml'
-    inventoriesAgentMachine: 'hostList'
-    inventoryHostListAgentMachine: '104.215.72.107,20.97.12.217'
+    inventoriesAgentMachine: 'file'
+    inventoryFileOnAgentMachine: 'ansible/inventory.yaml'
