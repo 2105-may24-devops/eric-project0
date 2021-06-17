@@ -20,12 +20,12 @@ from files.paths import get_cwd
 def create_logger(name, file):
     log_setup = logging.getLogger(name)
     formatter = logging.Formatter('%(asctime)s -- %(message)s', datefmt='%m/%d %I:%M %p')
-    fileHandler = logging.FileHandler(file, mode='a')
-    fileHandler.setFormatter(formatter)
-    streamHandler = logging.StreamHandler()
-    streamHandler.setFormatter(formatter)
+    file_handler = logging.FileHandler(file, mode='a')
+    file_handler.setFormatter(formatter)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
     log_setup.setLevel(logging.INFO)
-    log_setup.addHandler(fileHandler)
+    log_setup.addHandler(file_handler)
 
 def out(output, log, stdout=True):
     logging.getLogger(log).info(output)
@@ -78,7 +78,7 @@ def listen(parsed_args):
     # need to send receive into the backend somehow...
     try:
         run_server(("127.0.0.1", port), password, receive_folder, Payload)
-    except:
+    except Exception:
         out("Failed to start server...", "server", parsed_args.get("out", STD_OUT))
             
 def send(parsed_args):
@@ -132,7 +132,6 @@ def main():
     
     if final_arg == "ip":
         print("Your machine's ip address is", get_own_ip())
-        return
 
     elif final_arg == "listen":
         listen(parsed_args)

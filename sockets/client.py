@@ -38,8 +38,6 @@ class Client:
         return recv, True
 
     def send_data(self, key) -> bytes:
-        #print(len(self.payload), "sdfoisjdfsdojf")
-        #self.socket.sendall(self.payload)
         bytes_sent = 0
         progress_bar = ProgressBar(max_value=len(self.payload))
 
@@ -75,11 +73,3 @@ class Client:
         payload_response = self.send_data(resp)
         
         return self.parse_response(payload_response)
-
-
-
-
-
-
-# if __name__ == "__main__":
-#     send_data(('127.0.0.1', 8080), Initializer.make_init_message(5000, "nopassword"))

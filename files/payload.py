@@ -13,7 +13,7 @@ class Payload:
 
     #need to change this as the pickled object will send to a server its own client dump_folder
 
-    def __init__(self, root_folder : str, cwd=".", flatten : bool = False, files_to_read=list()):
+    def __init__(self, root_folder : str, cwd=".", flatten : bool = False, files_to_read=None):
         '''
         root_folder is where the contents of the data will be unpacked within the dump_folder static variable
         sender must set this variable, but if receiver has a folder of the same name, they too can change it.
@@ -41,15 +41,12 @@ class Payload:
 
     def __recursive_files_and_folders(self, dir : str = None, data : list = None) -> list:
         if dir is None:
-            # print(self.root_folder)
-            # files_and_folders = os.scandir(self.root_folder)
             p = self.root_folder
             payload = list()
         else:
-            # files_and_folders = os.scandir(dir)
             p = dir
             payload = data
-        #print(list(files_and_folders)[0].is_dir(), type(files_and_folders), "yo")
+
         with os.scandir(p) as files_and_folders:
             for item in files_and_folders:
 
@@ -99,7 +96,7 @@ class Payload:
                     os.mkdir(dump_folder+"/"+self.root_folder+"-"+str(i))
                     self.root_folder = self.root_folder+"-"+str(i)
                     return None
-                except Exception as e:
+                except Exception:
                     pass
         raise TooManyDuplicates("Clean up your received folder or change instance variable root_folder. You have too many duplicates.")
 
@@ -151,6 +148,3 @@ class Payload:
 if __name__ == "__main__":
     f=Payload()
     f.get_files()
-    #print(f.payload)
-    # f=paths.remove_dot_slash("./fff/tt.txt")
-    # print(f)
