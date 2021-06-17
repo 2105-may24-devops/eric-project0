@@ -10,20 +10,16 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
   
+- task: SonarCloudPrepare@1
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'my-sonar-cloud'
     organization: '2105-may24-devops'
     scannerMode: 'CLI'
-    configMode: 'file'
+    configMode: 'manual'
+    cliProjectKey: '2105-may24-devops_eric-project0'
+    cliSources: '.'
 - task: SonarCloudAnalyze@1
 - task: SonarCloudPublish@1
   inputs:
