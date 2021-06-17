@@ -97,6 +97,3 @@ def run_server(address, server_password, receive_folder, PayloadClass):
                 break
         except KeyboardInterrupt:
             q = "q"
-
-if __name__  == "__main__":
-    run_server(("127.0.0.1", 8080), "mypassword")
