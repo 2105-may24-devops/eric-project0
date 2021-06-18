@@ -27,4 +27,5 @@ steps:
   inputs:
     ansibleInterface: 'agentMachine'
     playbookPathOnAgentMachine: './ansible/docker_install.yaml'
-    inventoriesAgentMachine: 'noInventory'
+    inventoriesAgentMachine: 'file'
+    inventoryFileOnAgentMachine: './ansible/inventory.yaml'
