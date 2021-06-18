@@ -29,3 +29,6 @@ steps:
     playbookPathOnAgentMachine: './ansible/docker_install.yaml'
     inventoriesAgentMachine: 'file'
     inventoryFileOnAgentMachine: './ansible/inventory.yaml'
+- task: CmdLine@2
+  inputs:
+    script: 'ls -a'
