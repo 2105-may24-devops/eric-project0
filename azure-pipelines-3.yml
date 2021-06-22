@@ -17,7 +17,7 @@ steps:
     view: 
     definition: '44ddd27c-9f96-4d6a-9dca-5ed5cabbb67b'
     version: '1.0'
-    downloadPath: '$(System.ArtifactsDirectory)'
+    downloadPath: '$(System.DefaultWorkingDirectory)'
 
-- script: "ls $(System.ArtifactsDirectory)"
+- script: "ls $(System.DefaultWorkingDirectory)"
   displayName: 'Run a multi-line script'
