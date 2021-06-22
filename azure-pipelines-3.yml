@@ -5,7 +5,10 @@
 
 trigger:
 - master
-
+variables:
+    - group: k
+    - name: mine
+      value: rel
 pool:
   vmImage: ubuntu-latest
 
@@ -13,6 +16,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      echo $(keystore.lock)
-      
+      echo $(k.mine)
+      echo $(key.rock)
       echo Hello world
