@@ -1,0 +1,23 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: DownloadPackage@1
+  inputs:
+    packageType: 'maven'
+    feed: '60d1e099-dae9-4eca-88c8-e0f07eafdb56/869d46f1-404c-4d70-ba56-2b5c83c16f66'
+    view: 
+    definition: '44ddd27c-9f96-4d6a-9dca-5ed5cabbb67b'
+    version: '1.0'
+    downloadPath: '$(System.ArtifactsDirectory)'
+
+- script: "ls $(System.ArtifactsDirectory)"
+  displayName: 'Run a multi-line script'
