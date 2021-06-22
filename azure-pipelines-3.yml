@@ -8,11 +8,12 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
-
-steps:
-- task: CmdLine@2
-  inputs:
-    script: 'export hello=world'
-- task: CmdLine@2
-  inputs:
-    script: 'echo $hello'
+jobs:
+  - job:
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: 'export hello=world'
+    - task: CmdLine@2
+      inputs:
+        script: 'echo $hello'
