@@ -13,6 +13,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      echo 4(lock)
+      echo $(lock)
       
       echo Hello world
