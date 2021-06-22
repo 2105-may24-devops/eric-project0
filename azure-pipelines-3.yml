@@ -6,8 +6,7 @@
 trigger:
 - master
 variables:
-    - name: mine
-      value: rel
+    - group: database-info
 pool:
   vmImage: ubuntu-latest
 
@@ -15,6 +14,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      echo $(mine)
+      echo $(lock)
       echo $(key.rock)
       echo Hello world
