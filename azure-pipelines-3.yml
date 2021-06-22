@@ -6,7 +6,6 @@
 trigger:
 - master
 variables:
-    - group: k
     - name: mine
       value: rel
 pool:
