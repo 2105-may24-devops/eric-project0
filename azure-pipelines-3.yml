@@ -5,7 +5,8 @@
 
 trigger:
 - master
-
+variables:
+ - group: database-info
 pool:
   vmImage: ubuntu-latest
 jobs:
@@ -16,4 +17,4 @@ jobs:
         script: 'export hello=world'
     - task: CmdLine@2
       inputs:
-        script: 'echo $PATH'
+        script: 'echo $host_url'
