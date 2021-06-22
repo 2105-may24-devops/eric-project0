@@ -16,4 +16,4 @@ jobs:
         script: 'export hello=world'
     - task: CmdLine@2
       inputs:
-        script: 'echo $hello'
+        script: 'echo $PATH'
