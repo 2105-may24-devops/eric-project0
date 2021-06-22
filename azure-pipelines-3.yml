@@ -13,6 +13,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      echo $(lock)
+      echo $(keystore.lock)
       
       echo Hello world
